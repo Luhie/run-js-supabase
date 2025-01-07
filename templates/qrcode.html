@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR 코드 생성기</title>
+</head>
+<body>
+    <input type='text' id='changeToQRCode' value="">
+    <a href='javascript:void(0)' onclick="changeToQR()">만들기</a>
+    <canvas id='canvas'></canvas>
+    
+    <script type="module">
+        // QRCode 라이브러리 임포트
+        import QRCode from "https://cdn.jsdelivr.net/npm/qrcode@1.5.4/+esm";
+
+        // QR 코드 생성 함수
+        const generateQR = async (text) => {
+			const baseUrl = '/pc/edit.html?id='+text;
+            try {
+                // QR 코드 생성 후 데이터 URL 반환
+                const url = await QRCode.toDataURL(baseUrl);
+                console.log(url); // 콘솔에 QR 코드 URL 출력
+
+                // 캔버스에 QR 코드 그리기
+                const canvas = document.getElementById('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                img.onload = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height); // 기존 캔버스를 초기화
+                    ctx.drawImage(img, 0, 0); // 캔버스에 QR 코드 그리기
+                };
+                img.src = url; // QR 코드 이미지 URL 설정
+            } catch (err) {
+                console.error(err); // 에러 처리
+            }
+        };
+
+        // 버튼 클릭 시 호출되는 함수
+        window.changeToQR = () => {
+            const text = document.getElementById('changeToQRCode').value; // 입력된 텍스트 가져오기
+            if (text) {
+                generateQR(text); // 입력된 텍스트로 QR 코드 생성
+            } else {
+                alert("텍스트를 입력해주세요.");
+            }
+        };
+    </script>
+</body>
+</html>
