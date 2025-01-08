@@ -79,11 +79,13 @@ console.groupEnd('모듈 위입니다');
 	// });
 
 
-	window.encryption = () =>{
+	window.encryption = async () =>{
 		const crypt = new cpt();
 		const hash = crypt.getHash(userPw.value);
 		console.log(hash);
 		const db = new Supabase();
+
+		// await db.init();
 		db.insert({"user_id":userId.value, "user_pw":hash}).then((v)=>{
 			console.log(v);
 		});

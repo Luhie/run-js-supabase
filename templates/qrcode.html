@@ -16,7 +16,7 @@
 
         // QR 코드 생성 함수
         const generateQR = async (text) => {
-			const baseUrl = '/pc/edit.html?id='+text;
+			const baseUrl = 'erp.sominternational.com/v1/util/pc/edit.html?id='+text;
             try {
                 // QR 코드 생성 후 데이터 URL 반환
                 const url = await QRCode.toDataURL(baseUrl);
