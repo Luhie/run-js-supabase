@@ -74,24 +74,4 @@ class Supabase {
 	}
 }
 
-
-const loginProc = async () => {
-	const userId = document.getElementById('userId').value;
-	const userPw = document.getElementById('userPw').value;
-	console.log('hello %s %s',userId, userPw);
-
-	// const { error } = await _supabase
-	// .from('members')
-	// .insert({ user_id: userId, user_pw : userPw })
-
-const { data, error } = await _supabase
-.from('members')
-.select('*')
-
-if(error) console.error('Error fetching :', error);
-
-console.log(data)
-
-}
-
 export { Supabase };
