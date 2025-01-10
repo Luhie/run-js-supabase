@@ -49,38 +49,73 @@
 </div>
 </body>
 <script type="module">
-	// import { Supabase, joinProc } from "../../internal/service/joinProc.js";
-
-	// joinProc();
 
 // 여기를 main js라고 생각하고 하자.
 	const joinForm = document.getElementById('joinForm');
 
 	// 이거는 핸들러.
-	joinForm.onsubmit = (event) => {
+	joinForm.onsubmit = async (event) => {
 		// 기본 submit event 정지
 		event.preventDefault();
-		const form = event.target;
 
 		// formdata 객체 생성
-		const formData = new FormData(form);
+		const formData = new FormData(event.target);
 
 		// const memberId = formData.get('memberId');
-		const formDataObject = {};
-		for (let [key, value] of formData.entries()) {
-			formDataObject[key] = value;
+		const formDataObject = Object.fromEntries(formData.entries());
+		try {
+			const result = await joinProc(formDataObject);
+			if (result) {
+				swal('회원가입이 성공적으로 완료되었습니다.');
+			} else {
+				swal('회원가입 중 문제가 발생했습니다.');
+			}
+		} catch (error) {
+			swal('회원가입 중 에러가 발생했습니다.');
+			console.error('Join process failed:', error);
+
 		}
-		joinProc(formDataObject);
-		console.log(formDataObject)
 	}
 
-	const joinProc = (object) =>{
-		import('../../internal/controller/joinProc.js')
-		.then(module => {
-			console.log("joinProc function")
-			const result = module.joinProc(object);
-			console.log(result);
-		});
+	async function joinProc(object) {
+		try {
+			const { joinProc } = await import('../../internal/controller/joinProc.js');
+			console.log("Executing joinProc function");
+			const result = await joinProc(object);
+			console.log('Result from joinProc:', result);
+			return result;
+		} catch (error) {
+			console.error('Error loading or executing joinProc module:', error);
+		}
 	}
+
+
+	const swal = (text) => {
+	const title = null;
+		Swal.fire({
+			title: title,
+			text: text,
+			padding:"0.3em",
+			showClass: {
+				popup: `
+					animate__animated
+					animate__fadeInDown
+					animate__faster
+				`
+			},
+			hideClass: {
+				popup: `
+					animate__animated
+					animate__fadeOutUp
+					animate__faster
+				`
+			},
+			customClass: {
+				confirmButton: 'swal-confirm-button',
+				actions: 'no-margin-actions'
+			}
+	});
+
+}
 </script>
 </html>

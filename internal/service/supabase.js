@@ -80,13 +80,13 @@ class Supabase {
         .select('id')
         .single();
       if (error) {
-        // PGRST204 지정된 열 못찾음 // 23505 unique key 겹침 // 42703 가져오려는 열의 이름이 없음 // 23502 null column
+        // PGRST204 지정된 열 못찾음 // 23505 unique key 겹침 이미 있음 // 42703 가져오려는 열의 이름이 없음 // 23502 null column
         console.error("Fail Insert: ", error);
+        return error;
       } else {
         console.log("Insert data: ", data);
         return data;
       }
-      return error;
     } catch (error) {
       console.error("Insert error: ", error);
       return null;

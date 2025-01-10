@@ -9,7 +9,6 @@ export default class Bcrypt {
 
   // 비밀번호 해싱 함수
   async getHash() {
-
     try {
       const saltRounds = 10; // 추천 값: 10-12
       const salt = await bcryptjs.genSalt(saltRounds); // Salt 생성
@@ -17,14 +16,16 @@ export default class Bcrypt {
 
       console.log("Hashed Password:", hashedPassword);
 
-      return hashedPassword;
+	  const isMatch = await this.comparePassword(hashedPassword);
+	  if(isMatch) return hashedPassword;
+	  else throw error;
     } catch (error) {
       console.error("Error in hashPassword:", error);
       throw error;
     }
   }
 
-  async comparePassword() {
+  async comparePassword(hashedPassword) {
       // 비밀번호 비교
       const isMatch = await bcryptjs.compare(this.password, hashedPassword);
       console.log("Is Password Match?", isMatch); // true
