@@ -1,0 +1,21 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+html {
+	/* font-size: 62.5%; */
+}
+body{
+	font-family: 'Pretendard Variable';
+	width: 100%;
+	position: fixed;
+	overflow: hidden;
+}
+
+/* swal custom */
+.swal-confirm-button {
+	background-color: rgb(255, 193, 7);
+	padding: 0.5em 1em;
+
+}
+.no-margin-actions {
+  margin: 0 !important;
+  padding: 0;  /* Optional: removes padding if needed */
+}
