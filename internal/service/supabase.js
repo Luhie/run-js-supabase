@@ -1,7 +1,7 @@
-
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
 console.group('Supabase에 오신걸 환영합니다')
+
 class Supabase {
   static _supabase = null;
 
@@ -29,8 +29,9 @@ class Supabase {
 
   // 비공개 메서드로 설정파일 가져오기
   #getConf = async () => {
+    const url = this.#makePath(".config/dbconf.json");
     try {
-      const response = await fetch("../../.config/dbconf.json");
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Failed to load config file");
       }
@@ -43,26 +44,30 @@ class Supabase {
   };
 
   // 데이터를 가져오는 메서드
-  get = async (array = '', where='') => {
-	const key = Object.keys(where);
-	const value = where[key];
-    await this.check(); // 클라이언트 초기화 확인
+  get = async (where='', which='') => {
+    const key = Object.keys(where);
+    const value = where[key];
+
+    await this.check();
+    console.log(this.tableName);
     try {
       const { data, error } = await Supabase._supabase
         .from(this.tableName)
-        .select(array)
+        .select(which)
         .eq(key,value)
         .limit(1)
-        .single()
+        .single();
 
-      if (error) {
-        console.error("Error fetching: ", error);
-        return null;
-      }
-      return data;
-    } catch (error) {
-      console.error("Error fetching data: ", error);
-      return null;
+        if(error) {
+          console.error("Fail Select: ", error)
+          return {"state": 'error' ,"error": error };
+        }else{
+          return data;
+        }
+
+    } catch(e) {
+      console.log("Select Error", e);
+      throw new Error(e);
     }
   };
 
@@ -82,7 +87,7 @@ class Supabase {
       if (error) {
         // PGRST204 지정된 열 못찾음 // 23505 unique key 겹침 이미 있음 // 42703 가져오려는 열의 이름이 없음 // 23502 null column
         console.error("Fail Insert: ", error);
-        return error;
+        throw new Error(error);
       } else {
         console.log("Insert data: ", data);
         return data;
@@ -100,8 +105,18 @@ class Supabase {
       await this.init();
     }
   };
+
+
+  #makePath = (dir) => {
+    const currentUrl = window.location.href;
+
+    const url = new URL(currentUrl);
+    url.pathname = '/.__./'+dir;
+    return url.href
+  } 
 }
 
 export { Supabase };
 
 console.groupEnd('Supabase에 오신걸 환영합니다');
+

@@ -14,11 +14,14 @@ export default class Bcrypt {
       const salt = await bcryptjs.genSalt(saltRounds); // Salt 생성
       const hashedPassword = await bcryptjs.hash(this.password, salt); // 비밀번호 해싱
 
+
       console.log("Hashed Password:", hashedPassword);
 
 	  const isMatch = await this.comparePassword(hashedPassword);
+	  console.log(isMatch);
 	  if(isMatch) return hashedPassword;
 	  else throw error;
+
     } catch (error) {
       console.error("Error in hashPassword:", error);
       throw error;
@@ -27,8 +30,7 @@ export default class Bcrypt {
 
   async comparePassword(hashedPassword) {
       // 비밀번호 비교
-      const isMatch = await bcryptjs.compare(this.password, hashedPassword);
-      console.log("Is Password Match?", isMatch); // true
+      return await bcryptjs.compare(this.password, hashedPassword);
   }
 }
 

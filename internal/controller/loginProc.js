@@ -2,31 +2,33 @@ import { Supabase } from '../service/supabase.js';
 import { User } from '../service/user-model.js';
 
 console.group('Executing LoginProc');
-export async function LoginProc(object) {
+export async function loginProc(object) {
 
-  try {
     const user = new User(object);
-    const userData = await user.Ismat();
+    const userData = await user.get();
 
-//     if (!userData) {
-//       throw new Error('User data is invalid or undefined.');
-//     }
 
-//     const db = new Supabase('members');
-//     const result = await db.get(userData);
+    try{
+      const db = new Supabase('members');
 
-//     if (!result) {
-//       throw new Error('Failed to insert value into the database.');
-//     }
+      const result = await db.get({"member_id":userData.member_id});
 
-//     console.log('Inserted Record ID:', result.id);
+      if(result.state == 'error' && result.error.code == "PGRST116") return 0;
+      else {
+        if(result.member_id == userData.member_id) {
+          const checkPassword = await user.comparePassword(result.member_pw);
+          if(checkPassword) return 1;
+          else return 2;
+        }
+      }
 
-// 	// 성공적으로 삽입된 경우 result를 반환
-    return { success: true, data: result };
-  } catch (error) {
-    console.error('An error occurred during the join process:', error);
-    throw error;
-  }
+    }catch(e) {
+      console.log(e)
+      throw new Error(e);
+
+    }
+
+
 }
 
 console.groupEnd();

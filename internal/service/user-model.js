@@ -9,6 +9,14 @@ export class User {
     this.memberName = memberName;
   }
 
+  async get() {
+      return {
+        member_id: this.memberId,
+        member_pw: this.password,
+        member_name: this.memberName,
+      };
+  }
+
   async getInfo() {
     try {
       const hashedPassword = await this.hashPassword();
@@ -27,6 +35,15 @@ export class User {
     try {
       const bcrypt = new Bcrypt(this.password);
       return await bcrypt.getHash();
+    } catch (error) {
+      console.error('Error hashing password:', error);
+      throw error;
+    }
+  }
+  async comparePassword(hashedPassword) {
+    try {
+      const bcrypt = new Bcrypt(this.password);
+      return await bcrypt.comparePassword(hashedPassword);
     } catch (error) {
       console.error('Error hashing password:', error);
       throw error;
