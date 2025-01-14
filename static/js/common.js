@@ -5,4 +5,4 @@ const makePath = (dir) => {
 	const url = new URL(currentUrl);
 	url.pathname = '/.__./'+dir;
 	return url.href
-} 
+}

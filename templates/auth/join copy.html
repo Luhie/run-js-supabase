@@ -26,20 +26,16 @@
 					<div class="card-body">
 						<div class='row'>
 							<div class='input-group'>
-								<span class='input-group-text col-3 justify-content-center'>Email</span>
-								<input type='text' class='form-control' id='email' name='email'>
-							</div>
-							<div class='input-group'>
 								<span class='input-group-text col-3 justify-content-center'>ID</span>
-								<input type='text' class='form-control' id='userId' name='userId'>
+								<input type='text' class='form-control' id='memberId' name='memberId'>
 							</div>
 							<div class='input-group mt-1'>
 								<span class='input-group-text col-3 justify-content-center'>Password</span>
-								<input type='password' class='form-control' id='password' name='password'>
+								<input type='password' class='form-control' id='memberPw' name='memberPw'>
 							</div>
 							<div class='input-group mt-1'>
 								<span class='input-group-text col-3 justify-content-center'>Name</span>
-								<input type='text' class='form-control' id='userName' name='userName'>
+								<input type='text' class='form-control' id='memberName' name='memberName'>
 							</div>
 						</div>
 					</div>
@@ -65,20 +61,20 @@
 		// formdata 객체 생성
 		const formData = new FormData(event.target);
 
-		// const userId = formData.get('userId');
+		// const memberId = formData.get('memberId');
 		const formDataObject = Object.fromEntries(formData.entries());
-		// try {
+		try {
 			const result = await joinProc(formDataObject);
-			// if (result) {
-			// 	swal('회원가입이 성공적으로 완료되었습니다.');
-			// } else {
-			// 	swal('회원가입 중 문제가 발생했습니다.');
-			// }
-		// } catch (error) {
-		// 	swal('회원가입 중 에러가 발생했습니다.');
-		// 	console.error('Join process failed:', error);
+			if (result) {
+				swal('회원가입이 성공적으로 완료되었습니다.');
+			} else {
+				swal('회원가입 중 문제가 발생했습니다.');
+			}
+		} catch (error) {
+			swal('회원가입 중 에러가 발생했습니다.');
+			console.error('Join process failed:', error);
 
-		// }
+		}
 	}
 
 	async function joinProc(object) {
